@@ -48,6 +48,7 @@ public class UserMapper {
         if (userDto.getEmail() != null) user.setEmail(userDto.getEmail());
         return user;
     }
+
     public User updateUserFromDto(UserUpdateDto userDto, User user) {
         if (userDto.getName() != null) user.setName(userDto.getName());
         if (userDto.getEmail() != null) user.setEmail(userDto.getEmail());

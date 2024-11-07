@@ -46,7 +46,7 @@ public class ControllerExceptionHandler {
     }
 
     @ExceptionHandler(NoSuchUserException.class)
-    public ResponseEntity<String> NoSuchUserException(NoSuchUserException e) {
+    public ResponseEntity<String> noSuchUserException(NoSuchUserException e) {
         log.error("No such booking exception");
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
     }
