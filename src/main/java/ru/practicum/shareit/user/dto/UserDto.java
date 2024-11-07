@@ -1,5 +1,6 @@
-package ru.practicum.shareit.item.dto;
+package ru.practicum.shareit.user.dto;
 
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
@@ -10,19 +11,14 @@ import lombok.EqualsAndHashCode;
 @Data
 @Builder
 @EqualsAndHashCode(of = {"id"})
-public class ItemDto {
+public class UserDto {
     @Positive(message = "ID must be positive number")
     private Long id;
     @NotNull(message = "Name must not be null")
     @NotBlank(message = "Name must not be blank")
     private String name;
-    @NotNull(message = "Name must not be null")
-    @NotBlank(message = "Name must not be blank")
-    private String description;
-    @NotNull(message = "")
-    private Boolean available;
-    @Positive(message = "Owner ID must be positive number")
-    private Long ownerId;
-    @Positive(message = "Request ID must be positive number")
-    private Long requestId;
+    @NotNull(message = "Email must not be null")
+    @NotBlank(message = "Email must not be blank")
+    @Email(message = "Incorrect email format")
+    private String email;
 }
