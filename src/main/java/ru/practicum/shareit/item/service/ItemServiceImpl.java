@@ -90,12 +90,12 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public Collection<ItemDto> search(String text) {
         log.debug("Search item by name/description request received");
-        String lowCaseText = text.toLowerCase();
 
         if (text == null || text.trim().isEmpty()) {
             log.debug("No criteria for search provided");
             return Collections.emptyList();
         }
+        String lowCaseText = text.toLowerCase();
 
         return mapper.toDtoList(itemStorage.findAll().stream()
                 .filter(item -> item.getIsAvailable().equals(Boolean.TRUE) &&

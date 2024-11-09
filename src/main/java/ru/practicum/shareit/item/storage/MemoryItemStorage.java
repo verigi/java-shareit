@@ -26,17 +26,13 @@ public class MemoryItemStorage implements ItemStorage {
     @Override
     public Item update(Item item) {
         log.debug("Updating item {} in storage", item.getId());
-        find(item.getId());
         return storage.put(item.getId(), item);
     }
 
     @Override
     public Item delete(Long id) {
         log.debug("Deleting item {} from storage", id);
-        return Optional.ofNullable(storage.remove(id)).orElseThrow(() -> {
-            log.error("Incorrect item id: " + id);
-            throw new NoSuchItemException("Incorrect id");
-        });
+        return storage.remove(id);
     }
 
     @Override

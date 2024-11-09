@@ -32,10 +32,7 @@ public class MemoryUserStorage implements UserStorage {
     @Override
     public User delete(Long id) {
         log.debug("Deleting user {} from storage", id);
-        return Optional.ofNullable(storage.remove(id)).orElseThrow(() -> {
-            log.warn("Incorrect user id " + id);
-            throw new NoSuchUserException("Incorrect id");
-        });
+        return storage.remove(id);
     }
 
     @Override
