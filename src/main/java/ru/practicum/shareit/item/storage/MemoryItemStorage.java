@@ -3,7 +3,7 @@ package ru.practicum.shareit.item.storage;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import ru.practicum.shareit.exception.NoSuchItemException;
-import ru.practicum.shareit.item.model.Item;
+import ru.practicum.shareit.item.entity.Item;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -54,7 +54,7 @@ public class MemoryItemStorage implements ItemStorage {
     public Collection<Item> findAllByOwner(Long id) {
         log.debug("Getting items of user {} from storage", id);
         return storage.values().stream()
-                .filter(item -> item.getOwnerId().equals(id))
+                .filter(item -> item.getOwner().getId().equals(id))
                 .collect(Collectors.toList());
     }
 

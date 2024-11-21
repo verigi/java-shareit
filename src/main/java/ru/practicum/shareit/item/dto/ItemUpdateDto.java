@@ -9,7 +9,6 @@ import lombok.EqualsAndHashCode;
 @Builder
 @EqualsAndHashCode(of = {"id"})
 public class ItemUpdateDto {
-    @Positive(message = "ID must be positive number")
     private Long id;
     private String name;
     private String description;
