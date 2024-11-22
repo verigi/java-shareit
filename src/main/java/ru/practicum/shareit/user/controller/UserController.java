@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.shareit.user.dto.UserCreateDto;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.dto.UserUpdateDto;
 import ru.practicum.shareit.user.service.UserService;
@@ -24,38 +25,38 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<UserDto> createUser(@Valid @RequestBody UserDto userDto) {
-        log.info("Received POST request");
-        UserDto createdUser = userService.save(userDto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
+    public ResponseEntity<UserDto> createUser(@Valid @RequestBody UserCreateDto userDto) {
+        log.info("POST request received");
+        UserDto dto = userService.saveUser(userDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(dto);
     }
 
     @PatchMapping("/{userId}")
     public ResponseEntity<UserDto> updateUser(@PathVariable Long userId,
                                               @Valid @RequestBody UserUpdateDto userUpdateDto) {
-        log.info("Received PATCH request");
+        log.info("PATCH request received. User id: {}", userId);
         userUpdateDto.setId(userId);
-        UserDto updatedUser = userService.update(userId, userUpdateDto);
+        UserDto updatedUser = userService.updateUser(userId, userUpdateDto);
         return ResponseEntity.ok(updatedUser);
     }
 
     @DeleteMapping("/{userId}")
     public ResponseEntity<Void> deleteUser(@PathVariable Long userId) {
-        log.info("Received DELETE request");
-        userService.delete(userId);
+        log.info("DELETE request received. User id: {}", userId);
+        userService.deleteUser(userId);
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/{userId}")
     public ResponseEntity<UserDto> getUser(@PathVariable Long userId) {
-        log.info("Received GET request, single user");
-        UserDto user = userService.find(userId);
+        log.info("GET request received, single user. User id: {}", userId);
+        UserDto user = userService.findUser(userId);
         return ResponseEntity.ok(user);
     }
 
     @GetMapping
     public ResponseEntity<Collection<UserDto>> getAllUsers() {
-        log.info("Received GET request, full user list");
+        log.info("GET request received, full user list");
         Collection<UserDto> users = userService.findAll();
         return ResponseEntity.ok(users);
     }

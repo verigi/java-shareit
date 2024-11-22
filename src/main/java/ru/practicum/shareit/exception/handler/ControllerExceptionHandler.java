@@ -21,6 +21,20 @@ public class ControllerExceptionHandler {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(errorResponse);
     }
 
+    @ExceptionHandler(CommentIncorrectTimeException.class)
+    public ResponseEntity<Map<String, String>> handleCommentIncorrectTimeException(CommentIncorrectTimeException e) {
+        Map<String, String> errorResponse = new HashMap<>();
+        errorResponse.put("error", "Access denied");
+        errorResponse.put("message", e.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+    }
+
+    @ExceptionHandler(ItemAvailabilityException.class)
+    public ResponseEntity<String> itemAvailabilityException(ItemAvailabilityException e) {
+        log.error("Item is not available");
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+    }
+
     @ExceptionHandler(ItemOwnerException.class)
     public ResponseEntity<String> handleItemOwnerException(ItemOwnerException e) {
         log.error("Item owner exception");
@@ -45,9 +59,15 @@ public class ControllerExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
     }
 
+    @ExceptionHandler(NoSuchStateException.class)
+    public ResponseEntity<String> noSuchStateException(NoSuchStateException e) {
+        log.error("No such state enum exception");
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+    }
+
     @ExceptionHandler(NoSuchUserException.class)
     public ResponseEntity<String> noSuchUserException(NoSuchUserException e) {
-        log.error("No such booking exception");
+        log.error("No such user exception");
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
     }
 }

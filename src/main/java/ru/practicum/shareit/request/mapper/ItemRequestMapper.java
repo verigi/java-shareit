@@ -2,7 +2,7 @@ package ru.practicum.shareit.request.mapper;
 
 import org.springframework.stereotype.Component;
 import ru.practicum.shareit.request.dto.ItemRequestDto;
-import ru.practicum.shareit.request.model.ItemRequest;
+import ru.practicum.shareit.request.entity.ItemRequest;
 
 import java.util.Collection;
 import java.util.List;
@@ -11,22 +11,38 @@ import java.util.stream.Collectors;
 @Component
 public class ItemRequestMapper {
     public ItemRequestDto toDto(ItemRequest request) {
-        if (request == null) return null;
-
-        return ItemRequestDto.builder()
+        return request == null ? null : ItemRequestDto.builder()
                 .id(request.getId())
                 .description(request.getDescription())
                 .requestor(request.getRequestor())
+                .created(request.getCreated())
+                .build();
+    }
+
+    public ItemRequest toEntity(ItemRequest request) {
+        return request == null ? null : ItemRequest.builder()
+                .id(request.getId())
+                .description(request.getDescription())
+                .requestor(request.getRequestor())
+                .created(request.getCreated())
+                .build();
+    }
+
+    public ItemRequest toItemRequest(ItemRequest requestEntity) {
+        return requestEntity == null ? null : ItemRequest.builder()
+                .id(requestEntity.getId())
+                .description(requestEntity.getDescription())
+                .requestor(requestEntity.getRequestor())
+                .created(requestEntity.getCreated())
                 .build();
     }
 
     public ItemRequest toItemRequest(ItemRequestDto requestDto) {
-        if (requestDto == null) return null;
-
-        return ItemRequest.builder()
+        return requestDto == null ? null : ItemRequest.builder()
                 .id(requestDto.getId())
                 .description(requestDto.getDescription())
                 .requestor(requestDto.getRequestor())
+                .created(requestDto.getCreated())
                 .build();
     }
 
