@@ -154,7 +154,7 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    @Transactional(readOnly = true)
+    @Transactional
     public BookingDto approveBooking(Long bookingId, Long userId, Boolean approved) {
         log.debug("Approve booking request received. Booking id: {}", bookingId);
         Booking booking = checkBookingAndReturn(bookingId);

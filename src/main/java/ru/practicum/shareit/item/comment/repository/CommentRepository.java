@@ -9,6 +9,6 @@ import java.util.List;
 public interface CommentRepository extends JpaRepository<Comment, Long> {
     List<Comment> findAllByItemId(Long itemId);
 
-    @Query("SELECT c FROM Comment c WHERE c.item.id IN (?1)")
+    @Query("SELECT c FROM Comment c WHERE c.item.id = ?1")
     List<Comment> findAllCommentsByItemIn(List<Long> ids);
 }

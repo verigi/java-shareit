@@ -4,12 +4,12 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Data
-@Entity
 @Builder
+@Entity
+@Table(name = "users")
+@EqualsAndHashCode(of = {"id"})
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(of = {"id"})
-@Table(name = "users")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

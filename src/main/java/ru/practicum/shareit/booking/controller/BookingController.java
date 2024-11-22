@@ -17,7 +17,7 @@ import java.util.Collection;
 
 @Slf4j
 @RestController
-@RequestMapping("/bookings")
+@RequestMapping(path = "/bookings")
 public class BookingController {
 
     private final BookingService service;
@@ -79,7 +79,6 @@ public class BookingController {
         Collection<BookingDto> bookings = service.findAllBookingsByOwnerAndState(userId, state);
         return ResponseEntity.ok(bookings);
     }
-
     @PatchMapping("/{bookingId}")
     public ResponseEntity<BookingDto> approveBooking(
             @PathVariable("bookingId") Long bookingId,

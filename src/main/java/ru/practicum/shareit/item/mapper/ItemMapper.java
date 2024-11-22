@@ -36,15 +36,6 @@ public class ItemMapper {
                 .build();
     }
 
-    public Item toItem(ItemCreateDto item, User owner) {
-        return item == null ? null : Item.builder()
-                .name(item.getName())
-                .description(item.getDescription())
-                .available(item.getAvailable())
-                .owner(owner)
-                .build();
-    }
-
     public ItemExpandedDto toExpandedDto(Item item,
                                          List<Comment> comments,
                                          Optional<LocalDateTime> lastBooking,
@@ -62,14 +53,28 @@ public class ItemMapper {
 
     public ItemExpandedDto toExpandedDto(Item item,
                                          List<Comment> comments) {
-        return item == null ? null : ItemExpandedDto.builder()
+        if (item == null) return null;
+        ItemExpandedDto itemExpandedDto = ItemExpandedDto.builder()
                 .id(item.getId())
                 .name(item.getName())
                 .description(item.getDescription())
                 .available(item.getAvailable())
                 .comments(comments.stream().map(comment -> commentMapper.toDto(comment)).toList())
-                .requestId(item.getRequest() != null ? item.getRequest().getId() : null)
                 .ownerId(item.getOwner().getId())
+                .build();
+
+        if (item.getRequest() != null) {
+            itemExpandedDto.setRequestId(item.getRequest().getId());
+        }
+        return itemExpandedDto;
+    }
+
+    public Item toItem(ItemCreateDto item, User owner) {
+        return item == null ? null : Item.builder()
+                .name(item.getName())
+                .description(item.getDescription())
+                .available(item.getAvailable())
+                .owner(owner)
                 .build();
     }
 

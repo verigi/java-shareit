@@ -33,7 +33,6 @@ public class CommentMapper {
 
     public Comment updateCommentFromDto(CommentUpdateDto commentDto, Comment comment) {
         if (commentDto.getText() != null) comment.setText(commentDto.getText());
-
         return comment;
     }
 }

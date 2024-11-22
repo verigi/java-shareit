@@ -1,10 +1,8 @@
 package ru.practicum.shareit.request.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import ru.practicum.shareit.user.entity.User;
 
 import java.time.LocalDateTime;
@@ -12,8 +10,6 @@ import java.time.LocalDateTime;
 @Data
 @Builder
 @Entity
-@AllArgsConstructor
-@NoArgsConstructor
 @Table(name = "requests")
 public class ItemRequest {
     @Id
