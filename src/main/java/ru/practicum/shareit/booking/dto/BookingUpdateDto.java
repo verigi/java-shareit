@@ -6,6 +6,7 @@ import lombok.EqualsAndHashCode;
 import ru.practicum.shareit.booking.enums.Status;
 
 import java.time.LocalDateTime;
+
 @Data
 @Builder
 @EqualsAndHashCode(of = {"id"})

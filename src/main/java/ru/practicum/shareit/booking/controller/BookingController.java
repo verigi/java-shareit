@@ -79,6 +79,7 @@ public class BookingController {
         Collection<BookingDto> bookings = service.findAllBookingsByOwnerAndState(userId, state);
         return ResponseEntity.ok(bookings);
     }
+
     @PatchMapping("/{bookingId}")
     public ResponseEntity<BookingDto> approveBooking(
             @PathVariable("bookingId") Long bookingId,

@@ -14,7 +14,10 @@ public interface BookingService {
     BookingDto deleteBooking(Long bookingId);
 
     BookingDto findBooking(Long bookingId, Long userId);
+
     Collection<BookingDto> findAllBookingsByUserAndState(Long userId, String state);
+
     Collection<BookingDto> findAllBookingsByOwnerAndState(Long userId, String state);
+
     BookingDto approveBooking(Long bookingId, Long userId, Boolean approved);
 }
