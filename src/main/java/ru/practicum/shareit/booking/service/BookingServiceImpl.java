@@ -44,7 +44,7 @@ public class BookingServiceImpl implements BookingService {
 
 
     @Override
-    @Transactional(readOnly = true)
+    @Transactional
     public BookingDto saveBooking(Long userId, BookingCreateDto bookingDto) {
         log.debug("Save booking request received. Booker id: {}", userId);
         Item item = checkItemAndReturn(bookingDto.getItemId());
@@ -65,7 +65,7 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    @Transactional(readOnly = true)
+    @Transactional
     public BookingDto updateBooking(BookingUpdateDto bookingDto) {
         log.debug("Update booking request received. Booking id: {}", bookingDto.getId());
 
@@ -77,7 +77,7 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    @Transactional(readOnly = true)
+    @Transactional
     public BookingDto deleteBooking(Long bookingId) {
         log.debug("Delete booking request received. Booking id: {}", bookingId);
 
