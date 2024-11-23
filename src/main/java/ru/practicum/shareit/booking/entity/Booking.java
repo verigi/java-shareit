@@ -10,7 +10,7 @@ import ru.practicum.shareit.user.entity.User;
 
 
 import java.time.LocalDateTime;
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 @Data
 @Entity
