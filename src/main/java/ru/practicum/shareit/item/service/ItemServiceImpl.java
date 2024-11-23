@@ -110,12 +110,8 @@ public class ItemServiceImpl implements ItemService {
         log.debug("Get item request received. Item id: {}", itemId);
 
         Item item = checkItemAndReturn(itemId);
-
         return itemMapper.toExpandedDto(item,
-                commentRepository.findAllByItemId(itemId),
-                getLastBookingEnd(itemId),
-                getNextBookingStart(itemId));
-
+                commentRepository.findAllByItemId(itemId));
     }
 
     @Override

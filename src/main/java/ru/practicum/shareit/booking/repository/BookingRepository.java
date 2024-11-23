@@ -46,7 +46,7 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
                                                           @Param("end") LocalDateTime end);
 
     @Query("SELECT b.start FROM Booking b WHERE b.item.id = ?1 AND CURRENT_TIMESTAMP < b.start")
-    List<LocalDateTime> findNextBookingStartByItemId(Long itemId);
+    Optional<LocalDateTime> findNextBookingStartByItemId(Long itemId);
 
     @Query("SELECT b.end FROM Booking b WHERE b.item.id = ?1 AND CURRENT_TIMESTAMP > b.end " +
             "AND b.status = 'APPROVED' ORDER BY b.end DESC")
