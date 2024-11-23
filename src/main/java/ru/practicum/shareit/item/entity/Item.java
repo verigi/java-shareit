@@ -1,9 +1,10 @@
 package ru.practicum.shareit.item.entity;
 
-import jakarta.persistence.*;
 import lombok.*;
 import ru.practicum.shareit.request.entity.ItemRequest;
 import ru.practicum.shareit.user.entity.User;
+
+import javax.persistence.*;
 
 @Data
 @Builder

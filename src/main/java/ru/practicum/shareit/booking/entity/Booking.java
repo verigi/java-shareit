@@ -1,6 +1,5 @@
 package ru.practicum.shareit.booking.entity;
 
-import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -11,6 +10,7 @@ import ru.practicum.shareit.user.entity.User;
 
 
 import java.time.LocalDateTime;
+import javax.persistence.*;
 
 @Data
 @Entity

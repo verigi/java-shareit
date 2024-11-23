@@ -59,7 +59,7 @@ public class ItemMapper {
                 .name(item.getName())
                 .description(item.getDescription())
                 .available(item.getAvailable())
-                .comments(comments.stream().map(comment -> commentMapper.toDto(comment)).toList())
+                .comments(comments.stream().map(comment -> commentMapper.toDto(comment)).collect(Collectors.toList()))
                 .ownerId(item.getOwner().getId())
                 .build();
 
