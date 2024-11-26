@@ -4,12 +4,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.practicum.shareit.common.CommonChecker;
 import ru.practicum.shareit.booking.entity.Booking;
 import ru.practicum.shareit.booking.repository.BookingRepository;
 import ru.practicum.shareit.exception.CommentIncorrectTimeException;
-import ru.practicum.shareit.exception.ItemOwnerException;
-import ru.practicum.shareit.exception.NoSuchItemException;
-import ru.practicum.shareit.exception.NoSuchUserException;
+import ru.practicum.shareit.exception.ItemAccessException;
 import ru.practicum.shareit.item.comment.dto.CommentCreateDto;
 import ru.practicum.shareit.item.comment.dto.CommentDto;
 import ru.practicum.shareit.item.comment.entity.Comment;
@@ -33,23 +32,21 @@ import static java.util.stream.Collectors.toList;
 
 @Slf4j
 @Service
-public class ItemServiceImpl implements ItemService {
+public class ItemServiceImpl extends CommonChecker implements ItemService {
     private ItemRepository itemRepository;
-    private UserRepository userRepository;
     private BookingRepository bookingRepository;
     private CommentRepository commentRepository;
     private ItemMapper itemMapper;
     private CommentMapper commentMapper;
 
+
     @Autowired
     public ItemServiceImpl(ItemRepository itemRepository,
-                           UserRepository userRepository,
                            BookingRepository bookingRepository,
                            CommentRepository commentRepository,
                            ItemMapper itemMapper,
                            CommentMapper commentMapper) {
         this.itemRepository = itemRepository;
-        this.userRepository = userRepository;
         this.bookingRepository = bookingRepository;
         this.commentRepository = commentRepository;
         this.itemMapper = itemMapper;
@@ -78,7 +75,7 @@ public class ItemServiceImpl implements ItemService {
         Item item = checkItemAndReturn(itemId);
         if (!item.getOwner().getId().equals(ownerId)) {
             log.error("Illegal update request");
-            throw new ItemOwnerException("Only the owner can make updating");
+            throw new ItemAccessException("Only the owner can make updating");
         }
 
         Item updItem = itemMapper.updateItemFromDto(itemDto, item);
@@ -96,7 +93,7 @@ public class ItemServiceImpl implements ItemService {
 
         if (!item.getOwner().getId().equals(ownerId)) {
             log.warn("Illegal deleting request");
-            throw new ItemOwnerException("Only the owner can delete the item");
+            throw new ItemAccessException("Only the owner can delete the item");
         }
         itemRepository.delete(item);
 
@@ -159,19 +156,6 @@ public class ItemServiceImpl implements ItemService {
         return commentMapper.toDto(comment);
     }
 
-    private User checkUserAndReturn(Long userId) {
-        log.debug("Checking user");
-
-        return userRepository.findById(userId).orElseThrow(() -> new
-                NoSuchUserException("Incorrect user id: " + userId));
-    }
-
-    private Item checkItemAndReturn(Long itemId) {
-        log.debug("Checking item");
-
-        return itemRepository.findById(itemId).orElseThrow(() ->
-                new NoSuchItemException("Incorrect item id: " + itemId));
-    }
 
     private List<ItemExpandedDto> fillItemWithData(List<Item> userItems) {
         log.debug("Collecting item id list");
@@ -202,22 +186,5 @@ public class ItemServiceImpl implements ItemService {
                     return itemMapper.toExpandedDto(item, comments, lastEndDate, nextStartDate);
                 })
                 .collect(toList());
-    }
-
-
-    private Optional<LocalDateTime> getLastBookingEnd(Long itemId) {
-        log.debug("Getting last booking end datetime");
-
-        return bookingRepository.findLastBookingEndByItemId(itemId)
-                .stream()
-                .max(Comparator.naturalOrder());
-    }
-
-    private Optional<LocalDateTime> getNextBookingStart(Long itemId) {
-        log.debug("Getting next booking start datetime");
-
-        return bookingRepository.findNextBookingStartByItemId(itemId)
-                .stream()
-                .min(Comparator.naturalOrder());
     }
 }
