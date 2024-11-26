@@ -39,18 +39,21 @@ public class BookingController {
 
     @PutMapping("/{bookingId}")
     public ResponseEntity<BookingDto> update(
+            @RequestHeader("X-Sharer-User-Id") Long userId,
             @PathVariable Long bookingId,
             @Valid @RequestBody BookingUpdateDto newBooking) {
         log.info("Received PUT request to update booking with ID: {}", bookingId);
         newBooking.setId(bookingId);
-        BookingDto updatedBooking = service.updateBooking(newBooking);
+        BookingDto updatedBooking = service.updateBooking(userId, newBooking);
         return ResponseEntity.ok(updatedBooking);
     }
 
     @DeleteMapping("/{bookingId}")
-    public ResponseEntity<Void> delete(@PathVariable Long bookingId) {
+    public ResponseEntity<Void> delete(
+            @RequestHeader("X-Sharer-User-Id") Long userId,
+            @PathVariable Long bookingId) {
         log.info("Received DELETE request, booking with ID: {}", bookingId);
-        service.deleteBooking(bookingId);
+        service.deleteBooking(userId, bookingId);
         return ResponseEntity.noContent().build();
     }
 
