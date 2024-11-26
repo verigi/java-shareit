@@ -9,9 +9,9 @@ import java.util.Collection;
 public interface BookingService {
     BookingDto saveBooking(Long userId, BookingCreateDto bookingDto);
 
-    BookingDto updateBooking(BookingUpdateDto bookingDto);
+    BookingDto updateBooking(Long userId, BookingUpdateDto bookingDto);
 
-    BookingDto deleteBooking(Long bookingId);
+    BookingDto deleteBooking(Long userId, Long bookingId);
 
     BookingDto findBooking(Long bookingId, Long userId);
 
