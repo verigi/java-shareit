@@ -13,6 +13,18 @@ import java.util.Map;
 @Slf4j
 @ControllerAdvice
 public class ControllerExceptionHandler {
+    @ExceptionHandler(BookingAccessException.class)
+    public ResponseEntity<String> handleBookingAccessException(BookingAccessException e) {
+        log.error("Booking access denied");
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
+    }
+
+    @ExceptionHandler(ItemAccessException.class)
+    public ResponseEntity<String> handleItemAccessException(ItemAccessException e) {
+        log.error("Item access denied");
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
+    }
+
     @ExceptionHandler(EmailExistsException.class)
     public ResponseEntity<Map<String, String>> handleEmailExistsException(EmailExistsException e) {
         log.error("Existing email exception");
@@ -30,15 +42,9 @@ public class ControllerExceptionHandler {
     }
 
     @ExceptionHandler(ItemAvailabilityException.class)
-    public ResponseEntity<String> itemAvailabilityException(ItemAvailabilityException e) {
+    public ResponseEntity<String> handleItemAvailabilityException(ItemAvailabilityException e) {
         log.error("Item is not available");
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-    }
-
-    @ExceptionHandler(ItemOwnerException.class)
-    public ResponseEntity<String> handleItemOwnerException(ItemOwnerException e) {
-        log.error("Item owner exception");
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
     }
 
     @ExceptionHandler(NoSuchBookingException.class)
