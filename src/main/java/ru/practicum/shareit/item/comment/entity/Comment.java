@@ -1,6 +1,5 @@
 package ru.practicum.shareit.item.comment.entity;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
