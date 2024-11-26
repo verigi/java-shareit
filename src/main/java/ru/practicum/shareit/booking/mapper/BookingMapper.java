@@ -47,7 +47,6 @@ public class BookingMapper {
     public Booking updateBookingFromDto(BookingUpdateDto bookingDto, Booking booking) {
         if (bookingDto.getStart() != null) booking.setStart(bookingDto.getStart());
         if (bookingDto.getEnd() != null) booking.setEnd(bookingDto.getEnd());
-        if (bookingDto.getStatus() != null) booking.setStatus(bookingDto.getStatus());
 
         return booking;
     }
