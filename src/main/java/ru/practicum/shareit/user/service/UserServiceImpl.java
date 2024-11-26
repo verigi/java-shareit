@@ -4,8 +4,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.practicum.shareit.common.CommonChecker;
 import ru.practicum.shareit.exception.EmailExistsException;
-import ru.practicum.shareit.exception.NoSuchUserException;
 import ru.practicum.shareit.user.dto.UserCreateDto;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.dto.UserUpdateDto;
@@ -18,7 +18,7 @@ import java.util.Collection;
 
 @Slf4j
 @Service
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl extends CommonChecker implements UserService {
     private final UserRepository userRepository;
     private final UserMapper mapper;
 
@@ -46,7 +46,7 @@ public class UserServiceImpl implements UserService {
     public UserDto updateUser(Long userId, UserUpdateDto userUpdateDto) {
         log.debug("Update user request received. User id: {}", userId);
 
-        User existingUser = findById(userId);
+        User existingUser = checkUserAndReturn(userId);
 
         if (userUpdateDto.getName() != null) {
             existingUser.setName(userUpdateDto.getName());
@@ -68,7 +68,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto deleteUser(Long userId) {
         log.debug("Delete user request received. User id: {}", userId);
-        User user = findById(userId);
+        User user = checkUserAndReturn(userId);
 
         log.debug("Deleting successful!");
         userRepository.delete(user);
@@ -81,7 +81,7 @@ public class UserServiceImpl implements UserService {
     public UserDto findUser(Long userId) {
         log.debug("Get user request received. User id: {}", userId);
 
-        return mapper.toDto(findById(userId));
+        return mapper.toDto(checkUserAndReturn(userId));
     }
 
     @Override
@@ -93,10 +93,5 @@ public class UserServiceImpl implements UserService {
 
     private Boolean isEmailExists(String email) {
         return userRepository.findAll().stream().anyMatch(user -> user.getEmail().equals(email));
-    }
-
-    private User findById(Long id) {
-        return userRepository.findById(id)
-                .orElseThrow(() -> new NoSuchUserException("Incorrect id"));
     }
 }
