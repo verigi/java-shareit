@@ -13,6 +13,18 @@ import java.util.Map;
 @Slf4j
 @ControllerAdvice
 public class ControllerExceptionHandler {
+    @ExceptionHandler(BookingAccessException.class)
+    public ResponseEntity<String> handleBookingAccessException(BookingAccessException e) {
+        log.error("Booking access denied");
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
+    }
+
+    @ExceptionHandler(ItemAccessException.class)
+    public ResponseEntity<String> handleItemAccessException(ItemAccessException e) {
+        log.error("Item access denied");
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
+    }
+
     @ExceptionHandler(EmailExistsException.class)
     public ResponseEntity<Map<String, String>> handleEmailExistsException(EmailExistsException e) {
         log.error("Existing email exception");
@@ -21,10 +33,18 @@ public class ControllerExceptionHandler {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(errorResponse);
     }
 
-    @ExceptionHandler(ItemOwnerException.class)
-    public ResponseEntity<String> handleItemOwnerException(ItemOwnerException e) {
-        log.error("Item owner exception");
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
+    @ExceptionHandler(CommentIncorrectTimeException.class)
+    public ResponseEntity<Map<String, String>> handleCommentIncorrectTimeException(CommentIncorrectTimeException e) {
+        Map<String, String> errorResponse = new HashMap<>();
+        errorResponse.put("error", "Access denied");
+        errorResponse.put("message", e.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+    }
+
+    @ExceptionHandler(ItemAvailabilityException.class)
+    public ResponseEntity<String> handleItemAvailabilityException(ItemAvailabilityException e) {
+        log.error("Item is not available");
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
     }
 
     @ExceptionHandler(NoSuchBookingException.class)
@@ -45,9 +65,15 @@ public class ControllerExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
     }
 
+    @ExceptionHandler(NoSuchStateException.class)
+    public ResponseEntity<String> noSuchStateException(NoSuchStateException e) {
+        log.error("No such state enum exception");
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+    }
+
     @ExceptionHandler(NoSuchUserException.class)
     public ResponseEntity<String> noSuchUserException(NoSuchUserException e) {
-        log.error("No such booking exception");
+        log.error("No such user exception");
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
     }
 }

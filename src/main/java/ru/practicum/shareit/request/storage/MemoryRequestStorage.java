@@ -3,7 +3,7 @@ package ru.practicum.shareit.request.storage;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import ru.practicum.shareit.exception.NoSuchRequestException;
-import ru.practicum.shareit.request.model.ItemRequest;
+import ru.practicum.shareit.request.entity.ItemRequest;
 
 import java.util.Collection;
 import java.util.HashMap;

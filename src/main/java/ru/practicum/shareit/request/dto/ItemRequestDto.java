@@ -5,9 +5,10 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import ru.practicum.shareit.user.model.User;
+import ru.practicum.shareit.user.entity.User;
 
 import java.time.LocalDateTime;
+
 
 @Data
 @Builder
@@ -19,5 +20,6 @@ public class ItemRequestDto {
     private String description;
     @NotNull(message = "Requestor must not be null")
     private User requestor;
+    @NotNull(message = "Create date must not be null")
     private LocalDateTime created;
 }

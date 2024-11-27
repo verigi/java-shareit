@@ -3,47 +3,50 @@ package ru.practicum.shareit.user.service;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import ru.practicum.shareit.common.CommonChecker;
 import ru.practicum.shareit.exception.EmailExistsException;
+import ru.practicum.shareit.user.dto.UserCreateDto;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.dto.UserUpdateDto;
+import ru.practicum.shareit.user.entity.User;
 import ru.practicum.shareit.user.mapper.UserMapper;
-import ru.practicum.shareit.user.model.User;
-import ru.practicum.shareit.user.storage.UserStorage;
+import ru.practicum.shareit.user.repository.UserRepository;
 
 import java.util.ArrayList;
 import java.util.Collection;
 
 @Slf4j
 @Service
-public class UserServiceImpl implements UserService {
-    private final UserStorage userStorage;
+public class UserServiceImpl extends CommonChecker implements UserService {
+    private final UserRepository userRepository;
     private final UserMapper mapper;
 
     @Autowired
-    public UserServiceImpl(UserStorage userStorage, UserMapper mapper) {
-        this.userStorage = userStorage;
+    public UserServiceImpl(UserRepository userRepository, UserMapper mapper) {
+        this.userRepository = userRepository;
         this.mapper = mapper;
     }
 
     @Override
-    public UserDto save(UserDto userDto) {
-        log.debug("Save user request received. User name: {}", userDto.getName());
+    @Transactional
+    public UserDto saveUser(UserCreateDto userCreateDto) {
+        log.debug("Save user request received. User name: {}", userCreateDto.getName());
 
-        User user = mapper.toUser(userDto);
-        if (isEmailExists(userDto.getEmail())) {
+        if (isEmailExists(userCreateDto.getEmail())) {
             log.warn("Email exists already");
-            throw new EmailExistsException("Email " + userDto.getEmail() + " exists already");
+            throw new EmailExistsException("Email " + userCreateDto.getEmail() + " exists already");
         }
+        User user = userRepository.save(mapper.toUser(userCreateDto));
 
-        log.debug("Saving successful!");
-        return mapper.toDto(userStorage.save(user));
+        return mapper.toDto(user);
     }
 
     @Override
-    public UserDto update(Long userId, UserUpdateDto userUpdateDto) {
+    public UserDto updateUser(Long userId, UserUpdateDto userUpdateDto) {
         log.debug("Update user request received. User id: {}", userId);
 
-        User existingUser = userStorage.find(userId);
+        User existingUser = checkUserAndReturn(userId);
 
         if (userUpdateDto.getName() != null) {
             existingUser.setName(userUpdateDto.getName());
@@ -57,32 +60,38 @@ public class UserServiceImpl implements UserService {
             existingUser.setEmail(userUpdateDto.getEmail());
         }
 
-        User updatedUser = userStorage.update(existingUser);
+        User updatedUser = userRepository.save(existingUser);
         log.debug("Updating successful!");
         return mapper.toDto(updatedUser);
     }
 
     @Override
-    public UserDto delete(Long userId) {
+    public UserDto deleteUser(Long userId) {
         log.debug("Delete user request received. User id: {}", userId);
-        User user = userStorage.find(userId);
+        User user = checkUserAndReturn(userId);
+
         log.debug("Deleting successful!");
-        return mapper.toDto(userStorage.delete(userId));
+        userRepository.delete(user);
+
+        return mapper.toDto(user);
     }
 
     @Override
-    public UserDto find(Long userId) {
+    @Transactional(readOnly = true)
+    public UserDto findUser(Long userId) {
         log.debug("Get user request received. User id: {}", userId);
-        return mapper.toDto(userStorage.find(userId));
+
+        return mapper.toDto(checkUserAndReturn(userId));
     }
 
     @Override
     public Collection<UserDto> findAll() {
         log.debug("Get all users request received");
-        return mapper.toDtoList(new ArrayList<>(userStorage.findAll()));
+
+        return mapper.toDtoList(new ArrayList<>(userRepository.findAll()));
     }
 
     private Boolean isEmailExists(String email) {
-        return userStorage.findAll().stream().anyMatch(user -> user.getEmail().equals(email));
+        return userRepository.findAll().stream().anyMatch(user -> user.getEmail().equals(email));
     }
 }
