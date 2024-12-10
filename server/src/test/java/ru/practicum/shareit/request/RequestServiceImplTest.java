@@ -287,7 +287,9 @@ class RequestServiceImplTest {
     @Test
     @DisplayName("Find all requests. Successfully found")
     void shouldFindAllRequestsSuccessfully() {
-        User requestor = new User(1L, "Requestor", "requestor@yandex.ru");
+        Long currentUserId = 1L;
+        User requestor = new User(2L, "Requestor", "requestor@yandex.ru");
+
         Request request = Request.builder()
                 .id(2L)
                 .description("Request description")
@@ -312,28 +314,31 @@ class RequestServiceImplTest {
         RequestExpandedDto requestExpandedDto = RequestExpandedDto.builder()
                 .id(2L)
                 .description("Request description")
-                .requestor(UserDto.builder().id(1L).name("Requestor").build())
+                .requestor(UserDto.builder().id(2L).name("Requestor").build())
                 .created(LocalDateTime.now())
                 .items(itemDtos)
                 .build();
 
-        when(requestRepository.findAll()).thenReturn(List.of(request));
+        when(requestRepository.findAllByRequestorIdNot(currentUserId)).thenReturn(List.of(request));
         when(itemRepository.findByRequestIdIn(List.of(2L))).thenReturn(items);
         when(itemMapper.toDtoList(items)).thenReturn(itemDtos);
         when(requestMapper.toExpandedDto(request, itemDtos)).thenReturn(requestExpandedDto);
 
-        Collection<RequestExpandedDto> requests = requestService.findAll();
+        Collection<RequestExpandedDto> requests = requestService.findAll(currentUserId);
 
         assertNotNull(requests);
         assertEquals(1, requests.size());
+
         RequestExpandedDto actualRequest = requests.iterator().next();
         assertNotNull(actualRequest);
         assertEquals(2L, actualRequest.getId());
         assertEquals("Request description", actualRequest.getDescription());
         assertNotNull(actualRequest.getItems());
         assertEquals(1, actualRequest.getItems().size());
+        assertEquals(1L, actualRequest.getItems().get(0).getId());
+        assertEquals("Item 1", actualRequest.getItems().get(0).getName());
 
-        verify(requestRepository).findAll();
+        verify(requestRepository).findAllByRequestorIdNot(currentUserId);
         verify(itemRepository).findByRequestIdIn(List.of(2L));
         verify(requestMapper).toExpandedDto(request, itemDtos);
     }

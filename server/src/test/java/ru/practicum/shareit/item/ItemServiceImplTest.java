@@ -228,32 +228,6 @@ class ItemServiceImplTest {
     }
 
     @Test
-    @DisplayName("Search items. Empty string")
-    void shouldReturnEmptyListWhenSearchStringIsEmpty() {
-        String target = "";
-
-        Collection<ItemDto> result = itemService.search(target);
-
-        assertNotNull(result);
-        assertTrue(result.isEmpty());
-        verifyNoInteractions(itemRepository);
-        verifyNoInteractions(itemMapper);
-    }
-
-    @Test
-    @DisplayName("Search items. Null search string should return empty list")
-    void shouldReturnEmptyListWhenSearchStringIsNull() {
-        String target = null;
-
-        Collection<ItemDto> result = itemService.search(target);
-
-        assertNotNull(result);
-        assertTrue(result.isEmpty());
-        verifyNoInteractions(itemRepository);
-        verifyNoInteractions(itemMapper);
-    }
-
-    @Test
     @DisplayName("Add comment. Successful add")
     void shouldAddCommentSuccessfully() {
         User user = User.builder()

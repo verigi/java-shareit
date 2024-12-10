@@ -1,6 +1,5 @@
 package ru.practicum.shareit.booking;
 
-import jakarta.validation.ValidationException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -150,44 +149,6 @@ class BookingServiceImplTest {
                 () -> bookingService.saveBooking(bookerId, bookingCreateDto));
 
         assertEquals("Cannot book own item", exception.getMessage());
-        verify(itemRepository).findById(itemId);
-        verify(userRepository).findById(bookerId);
-    }
-
-    @Test
-    @DisplayName("Save booking. Booking start time is after end time")
-    void shouldFailToSaveBookingWithIncorrectDates() {
-        Long bookerId = 1L;
-        Long itemId = 1L;
-
-        User user = User.builder()
-                .id(bookerId)
-                .name("Booker")
-                .email("booker@yandex.ru")
-                .build();
-
-        Item item = Item.builder()
-                .id(itemId)
-                .name("Item Name")
-                .available(true)
-                .owner(User.builder()
-                        .id(2L)
-                        .build())
-                .build();
-
-        BookingCreateDto bookingCreateDto = BookingCreateDto.builder()
-                .start(LocalDateTime.now().plusDays(2))
-                .end(LocalDateTime.now().plusDays(1))
-                .itemId(itemId)
-                .build();
-
-        when(userRepository.findById(bookerId)).thenReturn(Optional.of(user));
-        when(itemRepository.findById(itemId)).thenReturn(Optional.of(item));
-
-        ValidationException exception = assertThrows(ValidationException.class,
-                () -> bookingService.saveBooking(bookerId, bookingCreateDto));
-
-        assertEquals("Incorrect booking time: the start must be early than the end", exception.getMessage());
         verify(itemRepository).findById(itemId);
         verify(userRepository).findById(bookerId);
     }

@@ -186,29 +186,19 @@ public class RequestServiceImplIntegrationTest {
                 .request(request2)
                 .build());
 
-        Collection<RequestExpandedDto> requests = requestService.findAll();
+        Collection<RequestExpandedDto> requests = requestService.findAll(requestor1.getId());
 
         assertNotNull(requests);
-        assertEquals(2, requests.size());
+        assertEquals(1, requests.size());
 
-        RequestExpandedDto foundRequest1 = requests.stream()
-                .filter(req -> req.getId().equals(request1.getId()))
-                .findFirst()
-                .orElseThrow(() -> new AssertionError());
-
-        assertNotNull(foundRequest1.getItems());
-        assertEquals(1, foundRequest1.getItems().size());
-        assertEquals(item1.getId(), foundRequest1.getItems().get(0).getId());
-        assertEquals(item1.getName(), foundRequest1.getItems().get(0).getName());
-
-        RequestExpandedDto foundRequest2 = requests.stream()
+        RequestExpandedDto foundRequest = requests.stream()
                 .filter(req -> req.getId().equals(request2.getId()))
                 .findFirst()
                 .orElseThrow(() -> new AssertionError());
 
-        assertNotNull(foundRequest2.getItems());
-        assertEquals(1, foundRequest2.getItems().size());
-        assertEquals(item2.getId(), foundRequest2.getItems().get(0).getId());
-        assertEquals(item2.getName(), foundRequest2.getItems().get(0).getName());
+        assertNotNull(foundRequest.getItems());
+        assertEquals(1, foundRequest.getItems().size());
+        assertEquals(item2.getId(), foundRequest.getItems().get(0).getId());
+        assertEquals(item2.getName(), foundRequest.getItems().get(0).getName());
     }
 }
