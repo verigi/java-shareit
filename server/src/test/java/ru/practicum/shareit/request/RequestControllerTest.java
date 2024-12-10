@@ -74,6 +74,7 @@ public class RequestControllerTest {
     @DisplayName("Updating a request")
     void shouldUpdateRequest() throws Exception {
         RequestUpdateDto requestUpdateDto = RequestUpdateDto.builder()
+                .id(1L)
                 .description("Updated description")
                 .build();
 
@@ -159,9 +160,10 @@ public class RequestControllerTest {
                 .items(List.of(ItemDto.builder().id(10L).name("Test Item").build()))
                 .build();
 
-        Mockito.when(requestService.findAll()).thenReturn(List.of(requestDto));
+        Mockito.when(requestService.findAll(1L)).thenReturn(List.of(requestDto));
 
-        mockMvc.perform(get("/requests/all"))
+        mockMvc.perform(get("/requests/all")
+                        .header("X-Sharer-User-Id", 1L))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].id").value(1L))
                 .andExpect(jsonPath("$[0].description").value("Need something to test"))
