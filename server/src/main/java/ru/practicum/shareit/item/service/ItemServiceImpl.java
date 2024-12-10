@@ -140,11 +140,6 @@ public class ItemServiceImpl extends CommonChecker implements ItemService {
     public Collection<ItemDto> search(String text) {
         log.debug("Search item by name/description request received");
 
-        if (text == null || text.trim().isEmpty()) {
-            log.debug("No criteria for search provided");
-            return Collections.emptyList();
-        }
-
         return itemRepository.search(text).stream()
                 .map(itemMapper::toDto)
                 .collect(toList());

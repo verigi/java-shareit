@@ -1,5 +1,6 @@
 package ru.practicum.shareit.booking;
 
+import jakarta.validation.ValidationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
@@ -14,6 +15,7 @@ import ru.practicum.shareit.booking.dto.BookingRequestDto;
 import ru.practicum.shareit.enums.State;
 import ru.practicum.shareit.booking.dto.BookingUpdateDto;
 
+import java.time.LocalDateTime;
 import java.util.Map;
 
 
@@ -40,6 +42,7 @@ public class BookingController {
     public ResponseEntity<Object> bookItem(@RequestHeader("X-Sharer-User-Id") long userId,
                                            @RequestBody @Valid BookingRequestDto requestDto) {
         log.info("Creating booking {}, userId={}", requestDto, userId);
+        validateBookingDates(requestDto.getStart(), requestDto.getEnd());
         return bookingClient.bookItem(userId, requestDto);
     }
 
@@ -64,6 +67,7 @@ public class BookingController {
             @RequestHeader("X-Sharer-User-Id") Long userId,
             @RequestBody @Valid BookingUpdateDto bookingUpdateDto) {
         log.info("Updating booking {}, userId={}", bookingId, userId);
+        validateBookingDates(bookingUpdateDto.getStart(), bookingUpdateDto.getEnd());
         return bookingClient.updateBooking(userId, bookingUpdateDto);
     }
 
@@ -83,5 +87,12 @@ public class BookingController {
         log.info("Approving booking {}, userId={}, approved={}", bookingId, userId, approved);
         Map<String, Object> parameters = Map.of("approved", approved);
         return bookingClient.approveBooking(userId, bookingId, approved);
+    }
+
+    private void validateBookingDates(LocalDateTime start, LocalDateTime end) {
+        if (!start.isBefore(end) || start.equals(end)) {
+            log.warn("Check booking time: start - {}, end - {}", start, end);
+            throw new ValidationException("Incorrect booking time: the start must be early than the end");
+        }
     }
 }

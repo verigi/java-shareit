@@ -70,9 +70,9 @@ public class RequestController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<Collection<RequestExpandedDto>> findAllRequests() {
-        log.info("Received GET request. Find all requests");
-        Collection<RequestExpandedDto> requests = service.findAll();
+    public ResponseEntity<Collection<RequestExpandedDto>> findAllRequests(@RequestHeader("X-Sharer-User-Id") Long userId) {
+        log.info("Received GET request. Find all requests, excluding user with ID: {}", userId);
+        Collection<RequestExpandedDto> requests = service.findAll(userId);
         return ResponseEntity.ok(requests);
     }
 }

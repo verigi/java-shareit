@@ -98,10 +98,10 @@ public class RequestServiceImpl extends CommonChecker implements RequestService 
 
     @Override
     @Transactional(readOnly = true)
-    public List<RequestExpandedDto> findAll() {
+    public List<RequestExpandedDto> findAll(Long userId) {
         log.debug("Get all requests query received");
 
-        List<Request> requests = requestRepository.findAll();
+        List<Request> requests = requestRepository.findAllByRequestorIdNot(userId);
 
         return fillRequestsWithItems(requests);
     }

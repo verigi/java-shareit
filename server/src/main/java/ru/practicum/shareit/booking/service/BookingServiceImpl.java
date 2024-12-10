@@ -1,7 +1,6 @@
 package ru.practicum.shareit.booking.service;
 
 
-import jakarta.validation.ValidationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -47,7 +46,6 @@ public class BookingServiceImpl extends CommonChecker implements BookingService 
         LocalDateTime start = bookingDto.getStart();
         LocalDateTime end = bookingDto.getEnd();
 
-        validateBookingDates(start, end);
         validateItemAvailability(bookerId, item);
 
         Booking booking = mapper.toBooking(bookingDto, item, user);
@@ -89,7 +87,6 @@ public class BookingServiceImpl extends CommonChecker implements BookingService 
                         updBooking.getId());
                 throw new BookingAccessException("Booking dates can only be updated in 'WAITING' status only");
             }
-            validateBookingDates(bookingUpdateDto.getStart(), bookingUpdateDto.getEnd());
             mapper.updateBookingFromDto(bookingUpdateDto, updBooking);
         }
 
@@ -203,12 +200,6 @@ public class BookingServiceImpl extends CommonChecker implements BookingService 
         return mapper.toDto(booking);
     }
 
-    private void validateBookingDates(LocalDateTime start, LocalDateTime end) {
-        if (!start.isBefore(end) || start.equals(end)) {
-            log.warn("Check booking time: start - {}, end - {}", start, end);
-            throw new ValidationException("Incorrect booking time: the start must be early than the end");
-        }
-    }
 
     private void validateItemAvailability(Long userId, Item item) {
         if (!item.getAvailable()) {

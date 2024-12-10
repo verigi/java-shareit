@@ -10,6 +10,8 @@ import ru.practicum.shareit.item.dto.ItemCreateDto;
 import ru.practicum.shareit.item.dto.ItemUpdateDto;
 import ru.practicum.shareit.item.dto.comment.CommentCreateDto;
 
+import java.util.Collections;
+
 @Slf4j
 @RestController
 @RequestMapping("/items")
@@ -64,6 +66,12 @@ public class ItemController {
     @GetMapping("/search")
     public ResponseEntity<Object> searchItems(@RequestParam String text) {
         log.info("Searching items with text={}", text);
+
+        if (text == null || text.trim().isEmpty()) {
+            log.debug("No criteria for search provided");
+            return ResponseEntity.ok(Collections.emptyList());
+        }
+
         return itemClient.searchItems(text);
     }
 

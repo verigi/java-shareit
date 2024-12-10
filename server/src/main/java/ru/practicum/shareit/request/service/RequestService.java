@@ -17,7 +17,7 @@ public interface RequestService {
 
     RequestExpandedDto findRequest(Long requestId);
 
-    Collection<RequestExpandedDto> findAll();
+    Collection<RequestExpandedDto> findAll(Long userId);
 
     List<RequestExpandedDto> findAllByRequestor(Long requestorId);
 }
